@@ -1,81 +1,95 @@
+<div align="center">
+
 # 🚀 Telegraph-Next
+### *Modern, High-Performance Asynchronous Telegraph API Wrapper*
 
-[![PyPI](https://img.shields.io/pypi/v/telegraph-next.svg)](https://pypi.org/project/telegraph-next)
-[![License](https://img.shields.io/github/license/Abbasxan/telegraph-next.svg)](https://github.com/Abbasxan/telegraph-next/blob/master/LICENSE)
+<p align="center">
+  <img src="https://img.shields.io/pypi/v/telegraph-next?style=for-the-badge&logo=pypi&color=blue" alt="PyPI">
+  <img src="https://img.shields.io/github/license/Abbasxan/telegraph-next?style=for-the-badge&logo=github&color=green" alt="License">
+  <img src="https://img.shields.io/github/stars/Abbasxan/telegraph-next?style=for-the-badge&logo=github&color=yellow" alt="Stars">
+  <img src="https://img.shields.io/badge/Python-3.7+-blue?style=for-the-badge&logo=python" alt="Python">
+</p>
 
-**Telegraph-Next** — это современная, высокопроизводительная асинхронная библиотека для работы с [Telegra.ph API](https://telegra.ph/api), построенная на базе **Pydantic v1** и **aiohttp**.
+---
 
-Это оживленный и улучшенный форк проекта `telegraph_api`, адаптированный для современных высоконагруженных систем и ботов.
+[Quick Start](#-quick-start) • [Key Features](#-key-features) • [Installation](#-installation) • [Bug Report](https://github.com/Abbasxan/telegraph-next/issues)
 
-## ✨ Ключевые особенности
+</div>
 
-*   **⚡ Async-first**: Полностью асинхронная архитектура для максимальной скорости.
-*   **🛡️ Pydantic Models**: Строгая валидация данных и удобные подсказки в IDE.
-*   **🎥 Smart Middlewares**: Автоматическая обработка YouTube-ссылок и очистка HTML.
-*   **🧼 Clean Code**: Исправлены критические баги оригинального репозитория (включая загрузку файлов и трансформацию тегов).
-*   **🚀 Готовность к нагрузкам**: Оптимизировано для ботов с миллионной аудиторией.
+## 🌟 Why Telegraph-Next?
 
-## 📦 Установка
+**Telegraph-Next** is a revitalized, async-first wrapper for the Telegra.ph API. We took the robust foundation of the original project and upgraded it for the modern era of high-load Telegram bots and scalable services.
+
+## ✨ Key Features
+
+*   **⚡ Fully Asynchronous**: Built from the ground up on `aiohttp` for non-blocking performance.
+*   **🛡️ Pydantic-Powered**: Every response is a validated object. Get full IDE autocompletion and type safety.
+*   **🎞️ Smart HTML Middlewares**: Automatic YouTube iframe handling and HTML tag filtering out of the box.
+*   **🧼 Clean & Fixed**: Zero resource leaks, fixed YouTube parsing bugs, and restored missing dependencies.
+*   **🧩 Easy Integration**: Designed as a drop-in modernization for high-load systems.
+
+---
+
+## 📦 Installation
+
+Install the latest version via pip:
 
 ```bash
 pip install telegraph-next
 ```
 
-## Documentation
+---
 
-You can read documentation of this package on [readthedocs](https://telegraph-api.readthedocs.io/en/latest/index.html)
+## 🛠 Quick Start
 
-Documentation of original REST api can be found on [telegra.ph](https://telegra.ph/api) site
-
-## Features
-- Asynchronous 
-- HTML2Nodes convertation
-- File uploading
-- Built with Pydantic
-- Documentation is provided
-## 🛠 Использование
-
+### 1. Basic Usage (Classic)
 ```python
 import asyncio
 from telegraph import Telegraph
 
-# Обязательно используем асинхронную функцию
 async def main():
-    # Создаем объект библиотеки
+    # Initialize the client
     telegraph = Telegraph()
     
-    # Создаем новый аккаунт
-    await telegraph.create_account(short_name="NeonRobot", author_name="Abbasxan")
+    # Create an account
+    await telegraph.create_account(short_name='NeonRobot', author_name='Abbasxan')
     
-    # Создаем страницу
-    new_page = await telegraph.create_page(
-        "My first Telegraph Post",
-        content_html="<p>Hello world!</p>" # Поддерживается HTML разметка
+    # Create a new page with HTML content
+    page = await telegraph.create_page(
+        title='My First Page',
+        content_html='<h1>Hello!</h1><p>Created using <b>Telegraph-Next</b>.</p>'
     )
     
-    # Ссылка на готовую страницу
-    print(f"Страница создана: {new_page.url}")
+    print(f"Page live at: {page.url}")
 
-# Запуск асинхронного кода
-if __name__ == '__main__':
-    asyncio.run(main())
+asyncio.run(main())
 ```
 
-## 🚀 Особенности
-- **Asynchronous**: Полностью асинхронная работа (требует `await`).
-- **HTML2Nodes**: Встроенная конвертация HTML в формат Telegraph.
-- **File uploading**: Загрузка медиафайлов одной командой.
-- **Pydantic**: Валидация всех данных через модели.
-
-## 📝 Изменения по сравнению с оригиналом
-*   Исправлен баг парсинга YouTube ID в мидлварях.
-*   Добавлены недостающие импорты BeautifulSoup.
-*   Добавлена поддержка контекстного менеджера для сессий.
-*   Исправлены утечки памяти при загрузке файлов.
-
-## 🤝 Авторство
-Оригинальная идея: [IvanProgramming](https://github.com/IvanProgramming)  
-Разработка и поддержка форка: [Abbasxan](https://github.com/Abbasxan)
+### 2. Using Context Manager (Recommended)
+```python
+async with Telegraph() as tg:
+    await tg.create_account(short_name='NeonRobot')
+    page = await tg.create_page('Modern Way', content_html='<i>Seamless!</i>')
+    print(page.url)
+```
 
 ---
-Licensed under [MIT](LICENSE).
+
+## 🚀 Advanced: HTML Middlewares
+Telegraph-Next automatically processes your HTML to ensure it matches Telegra.ph's strict rules:
+*   Converts YouTube links to supported embeds.
+*   Strips unsupported attributes while keeping `src` and `href`.
+*   Unwraps unsupported tags to preserve content.
+
+---
+
+## 🤝 Credits & Support
+Developed and maintained by **Abbasxan** (Neon Group).  
+Original concept by *IvanProgramming*.
+
+If you find this project useful, please give it a ⭐ on GitHub!
+
+---
+<div align="center">
+Licensed under <a href="LICENSE">MIT</a>.
+</div>
