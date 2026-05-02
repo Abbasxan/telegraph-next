@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="telegraph-next",
-    version="1.1.2",
+    version="1.1.3",
     author="Abbasxan",
     author_email="neongroupmmc@gmail.com",
     description="Modernized Asynchronous Telegraph API wrapper (revived fork)",
