@@ -4,7 +4,7 @@ from typing import List, IO
 
 import aiohttp
 from aiohttp import ContentTypeError
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 
 from .exceptions import MethodIsNotAllowed, TelegraphError, FileIsNotPresented, InvalidFileExtension
@@ -223,7 +223,7 @@ class Telegraph:
                     media_url = await response.text()
             if not media_url.startswith("http"):
                 raise Exception(f"Upload failed: {media_url}")
-            return parse_obj_as(UploadedFile, {"src": media_url})
+            return TypeAdapter(UploadedFile).validate_python({"src": media_url})
         except Exception as e:
             raise Exception(str(e))
         finally:
@@ -269,7 +269,7 @@ class Telegraph:
 
         data = result["result"]
         if model:
-            return parse_obj_as(model, data)
+            return TypeAdapter(model).validate_python(data)
         return data
 
     @staticmethod

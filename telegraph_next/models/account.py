@@ -11,10 +11,9 @@ class Account(BaseModel):
     """ Default author name used when creating new articles. """
     author_url: str
     """ Profile link, opened when users click on the author's name below the title. """
-    access_token: Optional[str]
-    """ Optional. Only returned by the createAccount and revokeAccessToken method. Access token of the Telegraph 
-    account. """
-    auth_url: Optional[str]
+    access_token: Optional[str] = None
+    """ Optional. Only returned by the createAccount and revokeAccessToken method. Access token of the Telegraph account. """
+    auth_url: Optional[str] = None
     """ Optional. URL to authorize a browser on telegra.ph and connect it to a Telegraph account. """
-    page_count: Optional[int]
+    page_count: Optional[int] = None
     """ Optional. Number of pages belonging to the Telegraph account. """

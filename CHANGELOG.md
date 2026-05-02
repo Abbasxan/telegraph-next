@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-05-02
+
+### Changed
+- **BREAKING**: Migrated from Pydantic V1 to **Pydantic V2** for up to 10x faster response parsing (V2 core is written in Rust).
+  - Replaced deprecated `parse_obj_as()` with `TypeAdapter().validate_python()` in `api.py`.
+  - Replaced deprecated `.dict()` with `.model_dump()` in `utils.py`.
+  - Replaced deprecated `.json()` with `.model_dump_json()` in `utils.py`.
+  - Replaced `update_forward_refs()` with `model_rebuild()` in `node.py`.
+  - Added default `= None` values to all `Optional` fields across all models as required by Pydantic V2.
+  - Converted absolute model imports to relative imports in `page.py` and `uploaded_file.py`.
+- Added Python 3.13 and 3.14 to the supported classifiers in `pyproject.toml` and `setup.py`.
+
 ## [1.1.4] - 2026-05-02
 
 ### Added

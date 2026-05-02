@@ -2,7 +2,7 @@ from typing import Optional, List, Union
 
 from pydantic import BaseModel
 
-from telegraph_next.models import Node
+from .node import Node
 
 
 class Page(BaseModel):
@@ -15,18 +15,17 @@ class Page(BaseModel):
     """ Title of the page. """
     description: str
     """ Description of the page. """
-    author_name: Optional[str]
+    author_name: Optional[str] = None
     """ Optional. Name of the author, displayed below the title. """
-    author_url: Optional[str]
-    """ Optional. Profile link, opened when users click on the author's name below the title.
-      Can be any link, not necessarily to a Telegram profile or channel. """
-    image_url: Optional[str]
+    author_url: Optional[str] = None
+    """ Optional. Profile link, opened when users click on the author's name below the title. """
+    image_url: Optional[str] = None
     """ Optional. Image URL of the page. """
-    content: Optional[List[Union[Node, str]]]
+    content: Optional[List[Union[Node, str]]] = None
     """ Optional. Content of the page. """
     views: int
     """ Number of page views for the page. """
-    can_edit: Optional[bool]
+    can_edit: Optional[bool] = None
     """ Optional. Only returned if access_token passed. True, if the target Telegraph account can edit the page. """
 
 

@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="telegraph-next",
-    version="1.1.4",
+    version="1.2.0",
     author="Abbasxan",
     author_email="neongroupmmc@gmail.com",
     description="Modernized Asynchronous Telegraph API wrapper (revived fork)",
@@ -37,7 +37,7 @@ setuptools.setup(
         "aiohttp>=3.7.4.post0",
         "beautifulsoup4>=4.9.3",
         "bs4>=0.0.1",
-        "pydantic>=1.8.2,<2.0.0",
+        "pydantic>=2.0.0",
         "urllib3>=1.26.6"
     ],
     include_package_data=True,

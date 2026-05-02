@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from telegraph_next.models import Node
+from .node import Node
 
 ALLOWED_EXTENSIONS = ['gif', 'jpg', 'jpe', 'jpeg', 'jfif', 'png', 'mp4', 'm4v', 'mp4v']
 
@@ -8,7 +8,8 @@ ALLOWED_EXTENSIONS = ['gif', 'jpg', 'jpe', 'jpeg', 'jfif', 'png', 'mp4', 'm4v', 
 class UploadedFile(BaseModel):
     """ Pydantic model for Uploaded to server File """
     src: str
-    """ Path to telegra.ph file """
+    """ Path to file (full URL when using Catbox fallback) """
+
     @property
     def extension(self) -> str:
         """ Extension of file """
@@ -39,5 +40,3 @@ class UploadedFile(BaseModel):
                     Node(tag="figcaption", children=[caption])
                 ]
             )
-
-

@@ -20,7 +20,7 @@ def normalize_locals(_locals: dict, *unnecessary_parameters) -> dict:
             if type(value) == int or type(value) == float:
                 result[param] = str(value)
             elif BaseModel in type(value).__bases__:
-                result[param] = value.json()
+                result[param] = value.model_dump_json()
             elif type(value) == list:
                 result[param] = dumps(value)
             elif type(value) == bool:
@@ -42,6 +42,6 @@ def serialize_nodes(nodes: List[Union[Node, str]]) -> List[Union[dict, str]]:
             if element:
                 result_list.append(element)
         elif type(element) == Node:
-            result_list.append(element.dict())
+            result_list.append(element.model_dump())
 
     return result_list
