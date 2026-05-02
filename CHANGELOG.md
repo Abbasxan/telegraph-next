@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2026-05-02
 
+### Added
+- **Async File Reading (`aiofiles`)**: `upload_file()` now reads files from disk asynchronously using `aiofiles`. This prevents event-loop blocking under high load when many users upload simultaneously.
+- **Auto-Retry Logic**: `upload_file()` now automatically retries up to 3 times (1-second back-off) on transient errors. Configurable via the `retries` parameter.
+- **Upload Timeout**: Added a 30-second hard timeout on the Catbox upload request to prevent silent hangs.
+
 ### Changed
 - **BREAKING**: Migrated from Pydantic V1 to **Pydantic V2** for up to 10x faster response parsing (V2 core is written in Rust).
   - Replaced deprecated `parse_obj_as()` with `TypeAdapter().validate_python()` in `api.py`.

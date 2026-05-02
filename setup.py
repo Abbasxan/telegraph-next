@@ -35,6 +35,7 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=[
         "aiohttp>=3.7.4.post0",
+        "aiofiles>=23.1.0",
         "beautifulsoup4>=4.9.3",
         "bs4>=0.0.1",
         "pydantic>=2.0.0",

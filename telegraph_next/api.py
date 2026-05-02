@@ -1,7 +1,9 @@
+import asyncio
 import logging
 from json import dumps
 from typing import List, IO
 
+import aiofiles
 import aiohttp
 from aiohttp import ContentTypeError
 from pydantic import TypeAdapter
@@ -196,39 +198,56 @@ class Telegraph:
         account = await self.make_request(APIEndpoints.EDIT_ACCOUNT_INFO, params=normalize_locals(locals()))
         return account
 
-    async def upload_file(self, file_path: str = None, file_stream: IO = None):
+    async def upload_file(self, file_path: str = None, file_stream: IO = None, retries: int = 3):
         """
-        Uploads file to telegra.ph servers
-        (only gif, jpg, jpe, jpeg, jfif, png, mp4, m4v, mp4v files allowed)
+        Uploads a file to Catbox.moe (reliable fallback since telegra.ph/upload is globally unstable).
+        Automatically retries up to `retries` times on transient errors.
 
         :param file_path: Path to file in local filesystem
-        :param file_stream: IO object for example can be occurred from open() function
-        :return: UploadedFile object
-        :raises FileIsNotPresented: If no files were passed into function
-        :raises InvalidFileExtension: If file extension is not supported by telegra.ph
+        :param file_stream: IO object (e.g. from open())
+        :param retries: Number of retry attempts on failure (default: 3)
+        :return: UploadedFile object with full Catbox URL in .src
+        :raises FileIsNotPresented: If no files were passed
+        :raises Exception: If all retry attempts are exhausted
         """
-        if file_path:
-            stream = open(file_path, "rb")
-        elif file_stream:
-            stream = file_stream
-        else:
+        if not file_path and not file_stream:
             raise FileIsNotPresented
-        data = aiohttp.FormData()
-        data.add_field('reqtype', 'fileupload')
-        data.add_field('fileToUpload', stream)
-        self.logger.debug("Uploading file to Catbox. ")
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post('https://catbox.moe/user/api.php', data=data) as response:
-                    media_url = await response.text()
-            if not media_url.startswith("http"):
-                raise Exception(f"Upload failed: {media_url}")
-            return TypeAdapter(UploadedFile).validate_python({"src": media_url})
-        except Exception as e:
-            raise Exception(str(e))
-        finally:
-            if file_path:
-                stream.close()
+
+        last_error = None
+        for attempt in range(1, retries + 1):
+            try:
+                data = aiohttp.FormData()
+                data.add_field('reqtype', 'fileupload')
+
+                if file_path:
+                    # Async file read — non-blocking, safe under high load
+                    async with aiofiles.open(file_path, "rb") as f:
+                        file_bytes = await f.read()
+                    data.add_field('fileToUpload', file_bytes, filename=file_path.split("/")[-1].split("\\")[-1])
+                else:
+                    data.add_field('fileToUpload', file_stream)
+
+                self.logger.debug(f"Uploading file to Catbox (attempt {attempt}/{retries}).")
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(
+                        'https://catbox.moe/user/api.php',
+                        data=data,
+                        timeout=aiohttp.ClientTimeout(total=30)
+                    ) as response:
+                        media_url = (await response.text()).strip()
+
+                if not media_url.startswith("http"):
+                    raise Exception(f"Catbox rejected upload: {media_url}")
+
+                return TypeAdapter(UploadedFile).validate_python({"src": media_url})
+
+            except Exception as e:
+                last_error = e
+                self.logger.warning(f"Upload attempt {attempt}/{retries} failed: {e}")
+                if attempt < retries:
+                    await asyncio.sleep(1)
+
+        raise Exception(f"Upload failed after {retries} attempts: {last_error}")
 
     async def make_request(self, endpoint: str, params: dict = None, method: str = "get", model=None,
                            use_token: bool = True, json=None, **extra_params):
