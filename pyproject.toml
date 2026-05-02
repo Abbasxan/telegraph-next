@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "telegraph-next"
+version = "1.1.2"
+description = "Modernized Asynchronous Telegraph API wrapper (revived fork)"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+  { name = "Abbasxan", email = "your-email@example.com" },
+  { name = "IvanProgramming" }
+]
+classifiers = [
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "aiohttp>=3.7.4.post0",
+    "pydantic>=1.8.2,<2.0.0",
+    "beautifulsoup4>=4.9.3",
+    "urllib3>=1.26.6"
+]
+
+[project.urls]
+Homepage = "https://github.com/Abbasxan/telegraph-next"
+Source = "https://github.com/Abbasxan/telegraph-next"
+BugTracker = "https://github.com/Abbasxan/telegraph-next/issues"
+
+[tool.setuptools]
+packages = ["telegraph"]
