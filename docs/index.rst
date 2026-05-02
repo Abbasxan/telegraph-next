@@ -1,4 +1,4 @@
-.. TelegraphAPI documentation master file, created by
+.. telegraph-next documentation master file, created by
    sphinx-quickstart on Mon Jul 19 10:05:41 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -11,7 +11,7 @@ Installation
 
 .. code-block:: shell-session
 
-   $ pip install telegraph-api
+   $ pip install telegraph-next
 
 Example Usage
 ----------------
@@ -23,7 +23,7 @@ Example Usage
        # Creating new Telegraph object
        telegraph = Telegraph()
        # Creating new account
-       await telegraph.create_account("My Favourite Blog", author_name="Ivan")
+       await telegraph.create_account("My Favourite Blog", author_name="Abbasxan")
        # Creating new page
        new_page = await telegraph.create_page(
            "My first Telegraph Post",
@@ -44,6 +44,7 @@ Here is a pdf file, that contains this documentation :download:`pdf <_/downloads
 
    api
    models
+
 
 
 

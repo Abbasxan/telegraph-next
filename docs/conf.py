@@ -17,12 +17,12 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'TelegraphAPI'
-copyright = '2021, IvanProgramming'
-author = 'IvanProgramming'
+project = 'telegraph-next'
+copyright = '2026, Abbasxan'
+author = 'Abbasxan'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = '1.1.4'
 
 
 # -- General configuration ---------------------------------------------------
@@ -52,3 +52,4 @@ html_theme = 'insegel'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
