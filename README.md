@@ -52,7 +52,7 @@ async def main():
     telegraph = Telegraph()
     
     # Create an account
-    await telegraph.create_account(short_name='NeonRobot', author_name='Abbasxan')
+    await telegraph.create_account(short_name='Abbasxan', author_name='Abbasxan')
     
     # Create a new page with HTML content
     page = await telegraph.create_page(
@@ -68,7 +68,7 @@ asyncio.run(main())
 ### 2. Using Context Manager (Recommended)
 ```python
 async with Telegraph() as tg:
-    await tg.create_account(short_name='NeonRobot')
+    await tg.create_account(short_name='Abbasxan')
     page = await tg.create_page('Modern Way', content_html='<i>Seamless!</i>')
     print(page.url)
 ```
