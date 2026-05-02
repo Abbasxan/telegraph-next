@@ -3,7 +3,7 @@ from typing import List, Union
 
 from pydantic import BaseModel
 
-from telegraph.models import Node
+from telegraph_next.models import Node
 
 
 def normalize_locals(_locals: dict, *unnecessary_parameters) -> dict:

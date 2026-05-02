@@ -2,7 +2,7 @@ from typing import Optional, List, Union
 
 from pydantic import BaseModel
 
-from telegraph.models import Node
+from telegraph_next.models import Node
 
 
 class Page(BaseModel):

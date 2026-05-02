@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from telegraph.models import Node
+from telegraph_next.models import Node
 
 ALLOWED_EXTENSIONS = ['gif', 'jpg', 'jpe', 'jpeg', 'jfif', 'png', 'mp4', 'm4v', 'mp4v']
 

@@ -7,13 +7,13 @@ from aiohttp import ContentTypeError
 from pydantic import parse_obj_as
 from typing.io import IO
 
-from telegraph.exceptions import MethodIsNotAllowed, TelegraphError, FileIsNotPresented, InvalidFileExtension
-from telegraph.html_transform import html2nodes
-from telegraph.models import Account, Page
-from telegraph.models import Node
-from telegraph.models.page import PagesList
-from telegraph.models.uploaded_file import UploadedFile
-from telegraph.utils import normalize_locals, serialize_nodes
+from telegraph_next.exceptions import MethodIsNotAllowed, TelegraphError, FileIsNotPresented, InvalidFileExtension
+from telegraph_next.html_transform import html2nodes
+from telegraph_next.models import Account, Page
+from telegraph_next.models import Node
+from telegraph_next.models.page import PagesList
+from telegraph_next.models.uploaded_file import UploadedFile
+from telegraph_next.utils import normalize_locals, serialize_nodes
 
 
 class APIEndpoints:
