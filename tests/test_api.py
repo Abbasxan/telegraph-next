@@ -6,8 +6,8 @@ from string import ascii_letters
 
 from pydantic import ValidationError
 
-from telegraph import Telegraph
-from telegraph.models import Node, Page
+from telegraph_next import Telegraph
+from telegraph_next.models import Node, Page
 
 logging.basicConfig(level=logging.WARNING)
 logging.getLogger("Telegraph").level = logging.DEBUG
