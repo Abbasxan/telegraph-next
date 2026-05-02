@@ -1,11 +1,11 @@
 import logging
 from json import dumps
-from typing import List
+from typing import List, IO
 
 import aiohttp
 from aiohttp import ContentTypeError
 from pydantic import parse_obj_as
-from typing.io import IO
+
 
 from telegraph_next.exceptions import MethodIsNotAllowed, TelegraphError, FileIsNotPresented, InvalidFileExtension
 from telegraph_next.html_transform import html2nodes
