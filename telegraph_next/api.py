@@ -7,26 +7,26 @@ from aiohttp import ContentTypeError
 from pydantic import parse_obj_as
 
 
-from telegraph_next.exceptions import MethodIsNotAllowed, TelegraphError, FileIsNotPresented, InvalidFileExtension
-from telegraph_next.html_transform import html2nodes
-from telegraph_next.models import Account, Page
-from telegraph_next.models import Node
-from telegraph_next.models.page import PagesList
-from telegraph_next.models.uploaded_file import UploadedFile
-from telegraph_next.utils import normalize_locals, serialize_nodes
+from .exceptions import MethodIsNotAllowed, TelegraphError, FileIsNotPresented, InvalidFileExtension
+from .html_transform import html2nodes
+from .models import Account, Page
+from .models import Node
+from .models.page import PagesList
+from .models.uploaded_file import UploadedFile
+from .utils import normalize_locals, serialize_nodes
 
 
 class APIEndpoints:
     """Class with endpoints of telegraph api"""
 
-    base_uri = "https://api.telegra.ph"
+    base_uri = "https://149.154.164.13"
     CREATE_ACCOUNT = f"{base_uri}/createAccount"
     CREATE_PAGE = f"{base_uri}/createPage"
     EDIT_ACCOUNT_INFO = f"{base_uri}/editAccountInfo"
     GET_ACCOUNT_INFO = f"{base_uri}/getAccountInfo"
     GET_PAGE_LIST = f"{base_uri}/getPageList"
     REVOKE_ACCESS_TOKEN = f"{base_uri}/revokeAccessToken"
-    UPLOAD = f"https://telegra.ph/upload"
+    UPLOAD = f"https://149.154.164.13/upload"
 
     @staticmethod
     def edit_page(page_name: str):
@@ -44,13 +44,15 @@ class APIEndpoints:
 class Telegraph:
     """Telegraph API class"""
 
-    def __init__(self, access_token=None):
+    def __init__(self, access_token=None, proxy=None):
         """
         Constructor of Class
 
         :param access_token: Access token. If not specified, limited quanity of methods will be availible, until you create account
+        :param proxy: Proxy URL (e.g. http://proxy:port)
         """
         self.access_token = access_token
+        self.proxy = proxy
         self.logger = logging.getLogger("Telegraph")
 
     async def create_account(self, short_name: str, author_name: str = None, author_url: str = None,
@@ -211,7 +213,17 @@ class Telegraph:
             stream = file_stream
         else:
             raise FileIsNotPresented
-        data = {"file": stream}
+        import mimetypes
+        
+        data = aiohttp.FormData()
+        filename = "image.png"
+        content_type = "image/png"
+        
+        if file_path:
+            filename = file_path.split("/")[-1].split("\\")[-1]
+            content_type = mimetypes.guess_type(file_path)[0] or "image/png"
+            
+        data.add_field("file", stream, filename=filename, content_type=content_type)
         self.logger.debug("Uploading file. ")
         try:
             response_text = await self.post(APIEndpoints.UPLOAD, data=data, params=None)
@@ -247,7 +259,9 @@ class Telegraph:
             else:
                 params["access_token"] = self.access_token
 
-        self.logger.debug(f"Making request to {endpoint}. Params - {params}")
+        if self.proxy:
+            extra_params.setdefault("proxy", self.proxy)
+
         if method == "get":
             result = await self.get(endpoint, params=params, **extra_params)
         elif method == "post":
@@ -275,7 +289,12 @@ class Telegraph:
         :param extra_params: Extra request params, passed into session.get function
         :return: Dict or Str, depending on raw flag
         """
-        async with aiohttp.request("get", url, params=params, **extra_params) as response:
+        headers = extra_params.pop("headers", {})
+        if "149.154.164.13" in url:
+            headers["Host"] = "telegra.ph" if url.endswith("/upload") else "api.telegra.ph"
+            extra_params["ssl"] = False
+            
+        async with aiohttp.request("get", url, params=params, headers=headers, **extra_params) as response:
             if raw:
                 return (await response.read()).decode(encoding=encoding)
             else:
@@ -293,7 +312,12 @@ class Telegraph:
         :param extra_params: Extra request params, passed into session.get function
         :return: Dict or Str, depending on raw flag
         """
-        async with aiohttp.request("post", url, params=params, **extra_params) as response:
+        headers = extra_params.pop("headers", {})
+        if "149.154.164.13" in url:
+            headers["Host"] = "telegra.ph" if url.endswith("/upload") else "api.telegra.ph"
+            extra_params["ssl"] = False
+            
+        async with aiohttp.request("post", url, params=params, headers=headers, **extra_params) as response:
             if raw:
                 return (await response.read()).decode(encoding=encoding)
             else:

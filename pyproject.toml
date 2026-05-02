@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "telegraph-next"
-version = "1.1.4"
+version = "1.1.5"
 description = "Modernized Asynchronous Telegraph API wrapper (revived fork)"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -36,4 +36,4 @@ Source = "https://github.com/Abbasxan/telegraph-next"
 BugTracker = "https://github.com/Abbasxan/telegraph-next/issues"
 
 [tool.setuptools]
-packages = ["telegraph_next"]
+packages = ["telegraph_next", "telegraph_next.models"]

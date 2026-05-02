@@ -1,8 +1,8 @@
 from typing import List
 
 from bs4 import BeautifulSoup
-from telegraph_next.html_transform_middlewares import *
-from telegraph_next.models import Node
+from .html_transform_middlewares import *
+from .models import Node
 
 middlewares = [
     handle_youtube_tags,
