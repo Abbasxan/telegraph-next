@@ -24,6 +24,8 @@
 
 *   **⚡ Fully Asynchronous**: Built from the ground up on `aiohttp` for non-blocking performance.
 *   **🛡️ Pydantic-Powered**: Every response is a validated object. Get full IDE autocompletion and type safety.
+*   **🌐 Native DPI Bypass**: Built-in direct IP routing (`149.154.164.13`) bypasses ISP SNI blocks natively without proxies.
+*   **🖼️ Universal Image Uploads**: `upload_file()` uses `catbox.moe` as a highly-reliable fallback due to Telegraph's global upload restrictions.
 *   **🎞️ Smart HTML Middlewares**: Automatic YouTube iframe handling and HTML tag filtering out of the box.
 *   **🧼 Clean & Fixed**: Zero resource leaks, fixed YouTube parsing bugs, and restored missing dependencies.
 *   **🧩 Easy Integration**: Designed as a drop-in modernization for high-load systems.
@@ -71,6 +73,17 @@ async with Telegraph() as tg:
     await tg.create_account(short_name='Abbasxan')
     page = await tg.create_page('Modern Way', content_html='<i>Seamless!</i>')
     print(page.url)
+```
+
+### 3. File Uploading (Catbox Fallback)
+Due to Telegraph's servers blocking native uploads globally, `telegraph-next` natively falls back to `catbox.moe` for ultra-reliable image uploads.
+```python
+async def upload_demo():
+    # Returns an UploadedFile object containing the full URL
+    uploaded = await telegraph.upload_file('photo.jpg')
+    
+    # Note: Returns the FULL url, so do not prepend https://telegra.ph!
+    print(f"File uploaded to: {uploaded.src}") 
 ```
 
 ---

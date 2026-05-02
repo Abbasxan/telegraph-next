@@ -213,24 +213,19 @@ class Telegraph:
             stream = file_stream
         else:
             raise FileIsNotPresented
-        import mimetypes
-        
         data = aiohttp.FormData()
-        filename = "image.png"
-        content_type = "image/png"
-        
-        if file_path:
-            filename = file_path.split("/")[-1].split("\\")[-1]
-            content_type = mimetypes.guess_type(file_path)[0] or "image/png"
-            
-        data.add_field("file", stream, filename=filename, content_type=content_type)
-        self.logger.debug("Uploading file. ")
+        data.add_field('reqtype', 'fileupload')
+        data.add_field('fileToUpload', stream)
+        self.logger.debug("Uploading file to Catbox. ")
         try:
-            response_text = await self.post(APIEndpoints.UPLOAD, data=data, params=None)
-            path_value = response_text[0]
-            return parse_obj_as(UploadedFile, path_value)
-        except ContentTypeError:
-            raise InvalidFileExtension
+            async with aiohttp.ClientSession() as session:
+                async with session.post('https://catbox.moe/user/api.php', data=data) as response:
+                    media_url = await response.text()
+            if not media_url.startswith("http"):
+                raise Exception(f"Upload failed: {media_url}")
+            return parse_obj_as(UploadedFile, {"src": media_url})
+        except Exception as e:
+            raise Exception(str(e))
         finally:
             if file_path:
                 stream.close()
